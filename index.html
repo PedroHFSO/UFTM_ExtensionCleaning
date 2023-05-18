@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Pedro Henrique F. S. Oliveira">
 
 <title>UFTM Extension Programs Dataset Cleaning</title>
 <style>
@@ -67,14 +68,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="index_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="index_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 </head>
 
-<body class="fullcontent">
+<body>
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this project</h2>
+   
+  <ul>
+  <li><a href="#about" id="toc-about" class="nav-link active" data-scroll-target="#about">About</a>
+  <ul class="collapse">
+  <li><a href="#on-the-dataset" id="toc-on-the-dataset" class="nav-link" data-scroll-target="#on-the-dataset">On the Dataset</a></li>
+  <li><a href="#requirements" id="toc-requirements" class="nav-link" data-scroll-target="#requirements">Requirements</a></li>
+  </ul></li>
+  <li><a href="#the-code" id="toc-the-code" class="nav-link" data-scroll-target="#the-code">The Code</a>
+  <ul class="collapse">
+  <li><a href="#imports" id="toc-imports" class="nav-link" data-scroll-target="#imports">Imports</a></li>
+  <li><a href="#exploring-the-dataset" id="toc-exploring-the-dataset" class="nav-link" data-scroll-target="#exploring-the-dataset">Exploring the dataset</a></li>
+  <li><a href="#column-testing" id="toc-column-testing" class="nav-link" data-scroll-target="#column-testing">Column-testing</a>
+  <ul class="collapse">
+  <li><a href="#registro" id="toc-registro" class="nav-link" data-scroll-target="#registro">Registro</a></li>
+  <li><a href="#título-da-atividade" id="toc-título-da-atividade" class="nav-link" data-scroll-target="#título-da-atividade">Título da Atividade</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -86,6 +112,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Pedro Henrique F. S. Oliveira </p>
+          </div>
+  </div>
     
   
     
@@ -94,18 +126,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<section id="about" class="level2">
-<h2 class="anchored" data-anchor-id="about">About</h2>
+<section id="about" class="level1">
+<h1>About</h1>
 <p>The goal of this notebook is for me to practice my ability of transforming and cleaning data from a data source and releasing something that can be used for further analysis.</p>
-<section id="on-the-dataset" class="level3">
-<h3 class="anchored" data-anchor-id="on-the-dataset">On the Dataset</h3>
+<section id="on-the-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="on-the-dataset">On the Dataset</h2>
 <p>The data used here was collected from a open source dataset from the brazilian government. It contains information about all the projects and extension programs from the brazilian university <em>Universidade Federal do Triângulo Mineiro</em> (UFTM) in the second semester of 2022 (period known as 2022/02). The link to download the dataset can be found <a href="https://dados.gov.br/dados/conjuntos-dados/programas-e-projetos-de-extenso">here</a>. I downloaded it and stored in the <code>./datasets/</code> folder with the name: <code>2022-2_extensions.csv</code>.</p>
 <p><code>Resource Name: "Informações Acadêmicas - Programas e Projetos de Extensão Universitária - 2022/02 [CSV]"</code></p>
 </section>
-<section id="requirements" class="level3">
-<h3 class="anchored" data-anchor-id="requirements">Requirements</h3>
+<section id="requirements" class="level2">
+<h2 class="anchored" data-anchor-id="requirements">Requirements</h2>
 <p>Execute the cell below to download all the required libraries used in this notebook.</p>
-<div class="cell">
+<div class="cell" data-execution_count="63">
 <details open="">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>pip install virtualenv <span class="co"># Install virtualenv if not already installed</span></span>
@@ -113,7 +145,1170 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>source myenv<span class="op">/</span><span class="bu">bin</span><span class="op">/</span>activate <span class="co"># Activate the virtual environment</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>pip install <span class="op">-</span>r requirements.txt <span class="co"># Install dependencies from requirements.txt</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: virtualenv in /home/pedro/.local/lib/python3.10/site-packages (20.23.0)
+Requirement already satisfied: filelock&lt;4,&gt;=3.11 in /home/pedro/.local/lib/python3.10/site-packages (from virtualenv) (3.12.0)
+Requirement already satisfied: distlib&lt;1,&gt;=0.3.6 in /home/pedro/.local/lib/python3.10/site-packages (from virtualenv) (0.3.6)
+Requirement already satisfied: platformdirs&lt;4,&gt;=3.2 in /home/pedro/.local/lib/python3.10/site-packages (from virtualenv) (3.2.0)
+Note: you may need to restart the kernel to use updated packages.</code></pre>
 </div>
+<div class="cell-output cell-output-stderr">
+<pre><code>UsageError: Line magic function `%virtualenv` not found.</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="the-code" class="level1">
+<h1>The Code</h1>
+<section id="imports" class="level2">
+<h2 class="anchored" data-anchor-id="imports">Imports</h2>
+<div class="cell" data-execution_count="64">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="exploring-the-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="exploring-the-dataset">Exploring the dataset</h2>
+<div class="cell" data-execution_count="65">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'datasets/2021-2_extensions.csv'</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="65">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">ATIVIDADES DE EXTENSÃO REGISTRADAS NA PRÓ-REITORIA DE EXTENSÃO UNIVERSITÁRIA (PROEXT) EM 2021 E HOMOLOGADAS PELO CONSELHO DE EXTENSÃO UNIVERSITÁRIA (COEXT)</th>
+<th data-quarto-table-cell-role="th">Unnamed: 1</th>
+<th data-quarto-table-cell-role="th">Unnamed: 2</th>
+<th data-quarto-table-cell-role="th">Unnamed: 3</th>
+<th data-quarto-table-cell-role="th">Unnamed: 4</th>
+<th data-quarto-table-cell-role="th">Unnamed: 5</th>
+<th data-quarto-table-cell-role="th">Unnamed: 6</th>
+<th data-quarto-table-cell-role="th">Unnamed: 7</th>
+<th data-quarto-table-cell-role="th">Unnamed: 8</th>
+<th data-quarto-table-cell-role="th">Unnamed: 9</th>
+<th data-quarto-table-cell-role="th">Unnamed: 10</th>
+<th data-quarto-table-cell-role="th">Unnamed: 11</th>
+<th data-quarto-table-cell-role="th">Unnamed: 12</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Registro</td>
+<td>Título da Atividade</td>
+<td>Coordenador da Atividade</td>
+<td>Unidade UFTM</td>
+<td>Modalidade</td>
+<td>Área Temática Principal</td>
+<td>Início</td>
+<td>Término</td>
+<td>Envio</td>
+<td>Data do Registro</td>
+<td>Edital</td>
+<td>Órgão Financeiro</td>
+<td>Valores (R$)</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>01/2021</td>
+<td>VIII CVIP - Curso de Verão em Imunoparasitologia</td>
+<td>Carlo Jose Freire de Oliveira</td>
+<td>PROPPG</td>
+<td>Curso</td>
+<td>Saúde</td>
+<td>01/02/2021</td>
+<td>04/02/2021</td>
+<td>31/12/2020</td>
+<td>08/01/2021</td>
+<td>SIGProj - Ed. Fluxo Contínuo - 10/2017 - sem f...</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>02/2021</td>
+<td>O Controle Regulatório como base para a Otimiz...</td>
+<td>Lucas Pereira Pires</td>
+<td>ICTE</td>
+<td>Evento</td>
+<td>Tecnologia e Produção</td>
+<td>22/01/2021</td>
+<td>28/01/2021</td>
+<td>06/01/2021</td>
+<td>18/01/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>03/2021</td>
+<td>Suporte Avançado de Vida em Pediatria</td>
+<td>Fabiana Jorge Bueno Galdino Barsam</td>
+<td>HC</td>
+<td>Curso</td>
+<td>Saúde</td>
+<td>29/01/2021</td>
+<td>01/02/2021</td>
+<td>30/12/2020</td>
+<td>21/01/2021</td>
+<td>SIGProj - Ed. Fluxo Contínuo - 10/2017 - sem f...</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>04/2021</td>
+<td>Jornal Ambientando: Engenharia Ambiental da UF...</td>
+<td>Carla Eloisa Diniz dos Santos</td>
+<td>ICTE</td>
+<td>Projeto</td>
+<td>Comunicação</td>
+<td>10/02/2021</td>
+<td>10/02/2023</td>
+<td>08/01/2021</td>
+<td>21/01/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">340</td>
+<td>340/2021</td>
+<td>Liga de Análises Clínicas (LAC)</td>
+<td>ALEXANDRE DE PAULA ROGERIO</td>
+<td>ICS</td>
+<td>Programa</td>
+<td>Educação</td>
+<td>06/12/2021</td>
+<td>16/12/2022</td>
+<td>21/10/2021</td>
+<td>13/12/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">341</td>
+<td>341/2021</td>
+<td>II Jornada do Setembro Amarelo</td>
+<td>TOMAS ROTELLI DE OLIVEIRA FERREIRA</td>
+<td>ICS</td>
+<td>Evento</td>
+<td>Educação</td>
+<td>20/9/2021</td>
+<td>30/09/2021</td>
+<td>9/12/2021</td>
+<td>23/12/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">342</td>
+<td>342/2021</td>
+<td>Liga Acadêmica de Psicobiologia - L-Psicobio</td>
+<td>Sionaldo Eduardo Ferreira</td>
+<td>ICBN</td>
+<td>Liga Acadêmica (Programa)</td>
+<td>Saúde</td>
+<td>01/03/2021</td>
+<td>01/12/2021</td>
+<td>19/12/2020</td>
+<td>12/01/2021</td>
+<td>SIGProj - Edital PIBEX nº 07/2020 - sem bolsa</td>
+<td>PROEXT-UFTM</td>
+<td>----</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">343</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">344</td>
+<td>Atualizada em 22/03/2022</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+</tbody>
+</table>
+
+<p>345 rows × 13 columns</p>
+</div>
+</div>
+</div>
+<p>Immediately, there are some things we can notice.</p>
+<ul>
+<li>The first row of the file contains what appears to be the title of the dataset, while the columns are in the second row.</li>
+<li>The last row contains the date when the dataset was last updated. This is good information, but it’s still metadata that is not relevant to be inside the dataset itself. Also, the second last row is empty, probably for organizational purposes in a spreadsheet.</li>
+<li>The first column is a “register” column, being the index column of the dataset.</li>
+</ul>
+<div class="cell" data-execution_count="66">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'datasets/2021-2_extensions.csv'</span>, skiprows<span class="op">=</span>[<span class="dv">0</span>])</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.iloc[:<span class="op">-</span><span class="dv">2</span>]</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="66">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Registro</th>
+<th data-quarto-table-cell-role="th">Título da Atividade</th>
+<th data-quarto-table-cell-role="th">Coordenador da Atividade</th>
+<th data-quarto-table-cell-role="th">Unidade UFTM</th>
+<th data-quarto-table-cell-role="th">Modalidade</th>
+<th data-quarto-table-cell-role="th">Área Temática Principal</th>
+<th data-quarto-table-cell-role="th">Início</th>
+<th data-quarto-table-cell-role="th">Término</th>
+<th data-quarto-table-cell-role="th">Envio</th>
+<th data-quarto-table-cell-role="th">Data do Registro</th>
+<th data-quarto-table-cell-role="th">Edital</th>
+<th data-quarto-table-cell-role="th">Órgão Financeiro</th>
+<th data-quarto-table-cell-role="th">Valores (R$)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>01/2021</td>
+<td>VIII CVIP - Curso de Verão em Imunoparasitologia</td>
+<td>Carlo Jose Freire de Oliveira</td>
+<td>PROPPG</td>
+<td>Curso</td>
+<td>Saúde</td>
+<td>01/02/2021</td>
+<td>04/02/2021</td>
+<td>31/12/2020</td>
+<td>08/01/2021</td>
+<td>SIGProj - Ed. Fluxo Contínuo - 10/2017 - sem f...</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>02/2021</td>
+<td>O Controle Regulatório como base para a Otimiz...</td>
+<td>Lucas Pereira Pires</td>
+<td>ICTE</td>
+<td>Evento</td>
+<td>Tecnologia e Produção</td>
+<td>22/01/2021</td>
+<td>28/01/2021</td>
+<td>06/01/2021</td>
+<td>18/01/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>03/2021</td>
+<td>Suporte Avançado de Vida em Pediatria</td>
+<td>Fabiana Jorge Bueno Galdino Barsam</td>
+<td>HC</td>
+<td>Curso</td>
+<td>Saúde</td>
+<td>29/01/2021</td>
+<td>01/02/2021</td>
+<td>30/12/2020</td>
+<td>21/01/2021</td>
+<td>SIGProj - Ed. Fluxo Contínuo - 10/2017 - sem f...</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>04/2021</td>
+<td>Jornal Ambientando: Engenharia Ambiental da UF...</td>
+<td>Carla Eloisa Diniz dos Santos</td>
+<td>ICTE</td>
+<td>Projeto</td>
+<td>Comunicação</td>
+<td>10/02/2021</td>
+<td>10/02/2023</td>
+<td>08/01/2021</td>
+<td>21/01/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>05/2021</td>
+<td>Seminário de Comemoração do Centenário de Paul...</td>
+<td>José Henrique Singolano Néspoli</td>
+<td>ICENE</td>
+<td>Curso</td>
+<td>Educação</td>
+<td>16/02/2021</td>
+<td>19/04/2021</td>
+<td>19/01/2021</td>
+<td>21/01/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">337</td>
+<td>338/2021</td>
+<td>V Simpósio da Liga Acadêmica de Saúde Esportiv...</td>
+<td>DANIEL FERREIRA MOREIRA LOBATO</td>
+<td>PROPPG</td>
+<td>Evento</td>
+<td>Saúde</td>
+<td>10/12/2021</td>
+<td>10/12/2021</td>
+<td>26/11/2021</td>
+<td>06/12/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">338</td>
+<td>339/2021</td>
+<td>Curso de Capacitação da Rede de Atendimento a...</td>
+<td>AILTON DE SOUZA ARAGAO</td>
+<td>ICS</td>
+<td>Curso</td>
+<td>Direitos Humanos e Justiça</td>
+<td>21/12/2021</td>
+<td>29/12/2021</td>
+<td>23/11/2021</td>
+<td>09/12/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">339</td>
+<td>340/2021</td>
+<td>Liga de Análises Clínicas (LAC)</td>
+<td>ALEXANDRE DE PAULA ROGERIO</td>
+<td>ICS</td>
+<td>Programa</td>
+<td>Educação</td>
+<td>06/12/2021</td>
+<td>16/12/2022</td>
+<td>21/10/2021</td>
+<td>13/12/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">340</td>
+<td>341/2021</td>
+<td>II Jornada do Setembro Amarelo</td>
+<td>TOMAS ROTELLI DE OLIVEIRA FERREIRA</td>
+<td>ICS</td>
+<td>Evento</td>
+<td>Educação</td>
+<td>20/9/2021</td>
+<td>30/09/2021</td>
+<td>9/12/2021</td>
+<td>23/12/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">341</td>
+<td>342/2021</td>
+<td>Liga Acadêmica de Psicobiologia - L-Psicobio</td>
+<td>Sionaldo Eduardo Ferreira</td>
+<td>ICBN</td>
+<td>Liga Acadêmica (Programa)</td>
+<td>Saúde</td>
+<td>01/03/2021</td>
+<td>01/12/2021</td>
+<td>19/12/2020</td>
+<td>12/01/2021</td>
+<td>SIGProj - Edital PIBEX nº 07/2020 - sem bolsa</td>
+<td>PROEXT-UFTM</td>
+<td>----</td>
+</tr>
+</tbody>
+</table>
+
+<p>342 rows × 13 columns</p>
+</div>
+</div>
+</div>
+<p>Here, I’ve dealt with the row issues. The columns appear to be well defined. Now, we shall analyze them individually.</p>
+</section>
+<section id="column-testing" class="level2">
+<h2 class="anchored" data-anchor-id="column-testing">Column-testing</h2>
+<section id="registro" class="level3">
+<h3 class="anchored" data-anchor-id="registro">Registro</h3>
+<p>This column has the purpose of being an index. Some questions arise here:</p>
+<ul>
+<li>Are there duplicate values? There shouldn’t exist any.</li>
+<li>The pattern seems to be &lt;ID&gt;/&lt;YEAR&gt;, with &lt;ID&gt; being a identity number that grows one by one and the year is always 2021, since this is a database for the year of 2021. Let’s look at it.</li>
+</ul>
+<div class="cell" data-execution_count="67">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>no_duplicates <span class="op">=</span> <span class="bu">len</span>(df[<span class="st">'Registro'</span>]) <span class="op">==</span> <span class="bu">len</span>(<span class="bu">set</span>(df[<span class="st">'Registro'</span>]))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>pattern_checker <span class="op">=</span> [<span class="bu">str</span>(<span class="bu">id</span><span class="op">+</span><span class="dv">1</span>).zfill(<span class="dv">2</span>)<span class="op">+</span><span class="st">'/2021'</span> <span class="cf">for</span> <span class="bu">id</span> <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(df[<span class="st">'Registro'</span>]))]</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>pattern_valid <span class="op">=</span> pattern_checker <span class="op">==</span> <span class="bu">list</span>(df[<span class="st">'Registro'</span>])</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Are there duplicates? </span><span class="ch">\n</span><span class="sc">{</span><span class="kw">not</span> no_duplicates<span class="sc">}</span><span class="ch">\n\n</span><span class="ss">'</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Is the &lt;ID&gt;&lt;YEAR&gt; pattern correct? </span><span class="ch">\n</span><span class="sc">{</span>pattern_valid<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Are there duplicates? 
+False
+
+
+Is the &lt;ID&gt;&lt;YEAR&gt; pattern correct? 
+False</code></pre>
+</div>
+</div>
+<p>Surprisingly, the expected pattern doesn’t work for that column. Let’s see why.</p>
+<div class="cell" data-execution_count="68">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>register_list <span class="op">=</span> <span class="bu">list</span>(df[<span class="st">'Registro'</span>])</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(pattern_checker) <span class="op">-</span> <span class="bu">len</span>(register_list)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="68">
+<pre><code>0</code></pre>
+</div>
+</div>
+<p>They have the same length. So let’s check the different elements.</p>
+<div class="cell" data-execution_count="69">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> register <span class="kw">in</span> pattern_checker:</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> register <span class="kw">not</span> <span class="kw">in</span> register_list:</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(register)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>300/2021
+316/2021
+326/2021
+333/2021
+335/2021
+337/2021</code></pre>
+</div>
+</div>
+<p>It’s handy that the initial part of the value has a similar structure to what we’re expecting. We can easily search the place the value it’s supposed to be at.</p>
+<div class="cell" data-execution_count="70">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df.iloc[[<span class="dv">299</span>, <span class="dv">315</span>, <span class="dv">325</span>, <span class="dv">332</span>, <span class="dv">334</span>, <span class="dv">336</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="70">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Registro</th>
+<th data-quarto-table-cell-role="th">Título da Atividade</th>
+<th data-quarto-table-cell-role="th">Coordenador da Atividade</th>
+<th data-quarto-table-cell-role="th">Unidade UFTM</th>
+<th data-quarto-table-cell-role="th">Modalidade</th>
+<th data-quarto-table-cell-role="th">Área Temática Principal</th>
+<th data-quarto-table-cell-role="th">Início</th>
+<th data-quarto-table-cell-role="th">Término</th>
+<th data-quarto-table-cell-role="th">Envio</th>
+<th data-quarto-table-cell-role="th">Data do Registro</th>
+<th data-quarto-table-cell-role="th">Edital</th>
+<th data-quarto-table-cell-role="th">Órgão Financeiro</th>
+<th data-quarto-table-cell-role="th">Valores (R$)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">299</td>
+<td>300/2021 (Nº de registro alterado - ver planil...</td>
+<td>I ENCONTRO DE TÉCNICO-ADMINISTRATIVOS EM EDUCA...</td>
+<td>WALESKA DAYSE DIAS DE SOUSA</td>
+<td>ICENE</td>
+<td>Evento</td>
+<td>Trabalho</td>
+<td>22/03/2022</td>
+<td>24/03/2022</td>
+<td>05/10/2021</td>
+<td>07/10/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">315</td>
+<td>316/2021 (proposta cancelada)</td>
+<td>Prospecção de oportunidades de Pesquisa, Desen...</td>
+<td>DOUGLAS MOURA MIRANDA</td>
+<td>Núcleo de Inovação Tecnológica</td>
+<td>Programa</td>
+<td>Tecnologia e Produção</td>
+<td>1/12/2021</td>
+<td>30/11/2026</td>
+<td>19/10/2021</td>
+<td>28/10/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">325</td>
+<td>326/2021 (Nº de registro alterado - ver planil...</td>
+<td>Anatomia descritiva e funcional do sistema art...</td>
+<td>LEONARDO AUGUSTO LOMBARDI</td>
+<td>ICBN</td>
+<td>Curso</td>
+<td>Saúde</td>
+<td>17/01/2022</td>
+<td>28/01/2022</td>
+<td>22/10/2021</td>
+<td>17/11/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">332</td>
+<td>333/2021 (Nº de registro alterado - ver planil...</td>
+<td>VIII SIMPÓSIO INTERNACIONAL DE ESTUDOS LINGUÍS...</td>
+<td>ANA AMELIA CALAZANS DA ROSA</td>
+<td>IELACHS</td>
+<td>Evento</td>
+<td>Educação</td>
+<td>03/05/2022</td>
+<td>06/05/2022</td>
+<td>18/11/2021</td>
+<td>24/11/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>FUNEPU</td>
+<td>23.850,73</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">334</td>
+<td>335/2021 (Nº de registro alterado - ver planil...</td>
+<td>Doação de Sangue - compromisso social</td>
+<td>SHEILA SOARES SILVA</td>
+<td>ICS</td>
+<td>Projeto</td>
+<td>Saúde</td>
+<td>03/01/2022</td>
+<td>31/10/2022</td>
+<td>23/11/2021</td>
+<td>03/12/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">336</td>
+<td>337/2021 (Nº de registro alterado - ver planil...</td>
+<td>Guia Digital Ilustrado das Angiospermas do Bai...</td>
+<td>POLYANA NORONHA SOARES</td>
+<td>ICENE</td>
+<td>Projeto</td>
+<td>Educação</td>
+<td>06/01/2022</td>
+<td>06/07/2022</td>
+<td>26/11/2021</td>
+<td>06/12/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>It’s easy to see now that that column contains some additional information in some rows. Let’s separate that into another column.</p>
+<div class="cell" data-execution_count="71">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> extract_info_from_register(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>        register: <span class="bu">str</span>,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>        year: <span class="bu">str</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    ) <span class="op">-&gt;</span> <span class="bu">str</span>:</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    split_reg <span class="op">=</span> register.split(year)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (split_reg[<span class="dv">1</span>] <span class="op">==</span> <span class="st">''</span>):</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'----'</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> split_reg[<span class="dv">1</span>]</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> remove_info_in_register(</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>        register: <span class="bu">str</span>,</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>        year: <span class="bu">str</span>      </span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    ) <span class="op">-&gt;</span> <span class="bu">str</span>:</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    split_reg <span class="op">=</span> register.split(year)</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> split_reg[<span class="dv">0</span>]<span class="op">+</span>year</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'Informação Registro'</span>] <span class="op">=</span> df.<span class="bu">apply</span>(<span class="kw">lambda</span> x: extract_info_from_register(x[<span class="st">'Registro'</span>], <span class="st">'2021'</span>), axis <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'Registro'</span>] <span class="op">=</span> df.<span class="bu">apply</span>(<span class="kw">lambda</span> x: remove_info_in_register(x[<span class="st">'Registro'</span>], <span class="st">'2021'</span>), axis <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="71">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Registro</th>
+<th data-quarto-table-cell-role="th">Título da Atividade</th>
+<th data-quarto-table-cell-role="th">Coordenador da Atividade</th>
+<th data-quarto-table-cell-role="th">Unidade UFTM</th>
+<th data-quarto-table-cell-role="th">Modalidade</th>
+<th data-quarto-table-cell-role="th">Área Temática Principal</th>
+<th data-quarto-table-cell-role="th">Início</th>
+<th data-quarto-table-cell-role="th">Término</th>
+<th data-quarto-table-cell-role="th">Envio</th>
+<th data-quarto-table-cell-role="th">Data do Registro</th>
+<th data-quarto-table-cell-role="th">Edital</th>
+<th data-quarto-table-cell-role="th">Órgão Financeiro</th>
+<th data-quarto-table-cell-role="th">Valores (R$)</th>
+<th data-quarto-table-cell-role="th">Informação Registro</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>01/2021</td>
+<td>VIII CVIP - Curso de Verão em Imunoparasitologia</td>
+<td>Carlo Jose Freire de Oliveira</td>
+<td>PROPPG</td>
+<td>Curso</td>
+<td>Saúde</td>
+<td>01/02/2021</td>
+<td>04/02/2021</td>
+<td>31/12/2020</td>
+<td>08/01/2021</td>
+<td>SIGProj - Ed. Fluxo Contínuo - 10/2017 - sem f...</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+<td>----</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>02/2021</td>
+<td>O Controle Regulatório como base para a Otimiz...</td>
+<td>Lucas Pereira Pires</td>
+<td>ICTE</td>
+<td>Evento</td>
+<td>Tecnologia e Produção</td>
+<td>22/01/2021</td>
+<td>28/01/2021</td>
+<td>06/01/2021</td>
+<td>18/01/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+<td>----</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>03/2021</td>
+<td>Suporte Avançado de Vida em Pediatria</td>
+<td>Fabiana Jorge Bueno Galdino Barsam</td>
+<td>HC</td>
+<td>Curso</td>
+<td>Saúde</td>
+<td>29/01/2021</td>
+<td>01/02/2021</td>
+<td>30/12/2020</td>
+<td>21/01/2021</td>
+<td>SIGProj - Ed. Fluxo Contínuo - 10/2017 - sem f...</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+<td>----</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>04/2021</td>
+<td>Jornal Ambientando: Engenharia Ambiental da UF...</td>
+<td>Carla Eloisa Diniz dos Santos</td>
+<td>ICTE</td>
+<td>Projeto</td>
+<td>Comunicação</td>
+<td>10/02/2021</td>
+<td>10/02/2023</td>
+<td>08/01/2021</td>
+<td>21/01/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+<td>----</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>05/2021</td>
+<td>Seminário de Comemoração do Centenário de Paul...</td>
+<td>José Henrique Singolano Néspoli</td>
+<td>ICENE</td>
+<td>Curso</td>
+<td>Educação</td>
+<td>16/02/2021</td>
+<td>19/04/2021</td>
+<td>19/01/2021</td>
+<td>21/01/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+<td>----</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">337</td>
+<td>338/2021</td>
+<td>V Simpósio da Liga Acadêmica de Saúde Esportiv...</td>
+<td>DANIEL FERREIRA MOREIRA LOBATO</td>
+<td>PROPPG</td>
+<td>Evento</td>
+<td>Saúde</td>
+<td>10/12/2021</td>
+<td>10/12/2021</td>
+<td>26/11/2021</td>
+<td>06/12/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+<td>----</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">338</td>
+<td>339/2021</td>
+<td>Curso de Capacitação da Rede de Atendimento a...</td>
+<td>AILTON DE SOUZA ARAGAO</td>
+<td>ICS</td>
+<td>Curso</td>
+<td>Direitos Humanos e Justiça</td>
+<td>21/12/2021</td>
+<td>29/12/2021</td>
+<td>23/11/2021</td>
+<td>09/12/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+<td>----</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">339</td>
+<td>340/2021</td>
+<td>Liga de Análises Clínicas (LAC)</td>
+<td>ALEXANDRE DE PAULA ROGERIO</td>
+<td>ICS</td>
+<td>Programa</td>
+<td>Educação</td>
+<td>06/12/2021</td>
+<td>16/12/2022</td>
+<td>21/10/2021</td>
+<td>13/12/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+<td>----</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">340</td>
+<td>341/2021</td>
+<td>II Jornada do Setembro Amarelo</td>
+<td>TOMAS ROTELLI DE OLIVEIRA FERREIRA</td>
+<td>ICS</td>
+<td>Evento</td>
+<td>Educação</td>
+<td>20/9/2021</td>
+<td>30/09/2021</td>
+<td>9/12/2021</td>
+<td>23/12/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+<td>----</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">341</td>
+<td>342/2021</td>
+<td>Liga Acadêmica de Psicobiologia - L-Psicobio</td>
+<td>Sionaldo Eduardo Ferreira</td>
+<td>ICBN</td>
+<td>Liga Acadêmica (Programa)</td>
+<td>Saúde</td>
+<td>01/03/2021</td>
+<td>01/12/2021</td>
+<td>19/12/2020</td>
+<td>12/01/2021</td>
+<td>SIGProj - Edital PIBEX nº 07/2020 - sem bolsa</td>
+<td>PROEXT-UFTM</td>
+<td>----</td>
+<td>----</td>
+</tr>
+</tbody>
+</table>
+
+<p>342 rows × 14 columns</p>
+</div>
+</div>
+</div>
+<p>Now that column works better and the information is kept elsewhere. I’ll just change the order of the columns to have both information closer and make it more readable.</p>
+<div class="cell" data-execution_count="80">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>target_col_name <span class="op">=</span> <span class="st">'Informação Registro'</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>first_part_cols <span class="op">=</span> [<span class="st">'Registro'</span>]</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>second_part_cols <span class="op">=</span> [col <span class="cf">for</span> col <span class="kw">in</span> df.columns <span class="cf">if</span> col <span class="kw">not</span> <span class="kw">in</span> first_part_cols <span class="kw">and</span> col <span class="op">!=</span> target_col_name]</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>second_part_cols</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df[first_part_cols <span class="op">+</span> [target_col_name] <span class="op">+</span> second_part_cols]</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="80">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Registro</th>
+<th data-quarto-table-cell-role="th">Informação Registro</th>
+<th data-quarto-table-cell-role="th">Título da Atividade</th>
+<th data-quarto-table-cell-role="th">Coordenador da Atividade</th>
+<th data-quarto-table-cell-role="th">Unidade UFTM</th>
+<th data-quarto-table-cell-role="th">Modalidade</th>
+<th data-quarto-table-cell-role="th">Área Temática Principal</th>
+<th data-quarto-table-cell-role="th">Início</th>
+<th data-quarto-table-cell-role="th">Término</th>
+<th data-quarto-table-cell-role="th">Envio</th>
+<th data-quarto-table-cell-role="th">Data do Registro</th>
+<th data-quarto-table-cell-role="th">Edital</th>
+<th data-quarto-table-cell-role="th">Órgão Financeiro</th>
+<th data-quarto-table-cell-role="th">Valores (R$)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>01/2021</td>
+<td>----</td>
+<td>VIII CVIP - Curso de Verão em Imunoparasitologia</td>
+<td>Carlo Jose Freire de Oliveira</td>
+<td>PROPPG</td>
+<td>Curso</td>
+<td>Saúde</td>
+<td>01/02/2021</td>
+<td>04/02/2021</td>
+<td>31/12/2020</td>
+<td>08/01/2021</td>
+<td>SIGProj - Ed. Fluxo Contínuo - 10/2017 - sem f...</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>02/2021</td>
+<td>----</td>
+<td>O Controle Regulatório como base para a Otimiz...</td>
+<td>Lucas Pereira Pires</td>
+<td>ICTE</td>
+<td>Evento</td>
+<td>Tecnologia e Produção</td>
+<td>22/01/2021</td>
+<td>28/01/2021</td>
+<td>06/01/2021</td>
+<td>18/01/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>03/2021</td>
+<td>----</td>
+<td>Suporte Avançado de Vida em Pediatria</td>
+<td>Fabiana Jorge Bueno Galdino Barsam</td>
+<td>HC</td>
+<td>Curso</td>
+<td>Saúde</td>
+<td>29/01/2021</td>
+<td>01/02/2021</td>
+<td>30/12/2020</td>
+<td>21/01/2021</td>
+<td>SIGProj - Ed. Fluxo Contínuo - 10/2017 - sem f...</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>04/2021</td>
+<td>----</td>
+<td>Jornal Ambientando: Engenharia Ambiental da UF...</td>
+<td>Carla Eloisa Diniz dos Santos</td>
+<td>ICTE</td>
+<td>Projeto</td>
+<td>Comunicação</td>
+<td>10/02/2021</td>
+<td>10/02/2023</td>
+<td>08/01/2021</td>
+<td>21/01/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>05/2021</td>
+<td>----</td>
+<td>Seminário de Comemoração do Centenário de Paul...</td>
+<td>José Henrique Singolano Néspoli</td>
+<td>ICENE</td>
+<td>Curso</td>
+<td>Educação</td>
+<td>16/02/2021</td>
+<td>19/04/2021</td>
+<td>19/01/2021</td>
+<td>21/01/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="79">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>df.iloc[[<span class="dv">299</span>, <span class="dv">315</span>, <span class="dv">325</span>, <span class="dv">332</span>, <span class="dv">334</span>, <span class="dv">336</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="79">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Registro</th>
+<th data-quarto-table-cell-role="th">Informação Registro</th>
+<th data-quarto-table-cell-role="th">Título da Atividade</th>
+<th data-quarto-table-cell-role="th">Coordenador da Atividade</th>
+<th data-quarto-table-cell-role="th">Unidade UFTM</th>
+<th data-quarto-table-cell-role="th">Modalidade</th>
+<th data-quarto-table-cell-role="th">Área Temática Principal</th>
+<th data-quarto-table-cell-role="th">Início</th>
+<th data-quarto-table-cell-role="th">Término</th>
+<th data-quarto-table-cell-role="th">Envio</th>
+<th data-quarto-table-cell-role="th">Data do Registro</th>
+<th data-quarto-table-cell-role="th">Edital</th>
+<th data-quarto-table-cell-role="th">Órgão Financeiro</th>
+<th data-quarto-table-cell-role="th">Valores (R$)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">299</td>
+<td>300/2021</td>
+<td>(Nº de registro alterado - ver planilha de 2022)</td>
+<td>I ENCONTRO DE TÉCNICO-ADMINISTRATIVOS EM EDUCA...</td>
+<td>WALESKA DAYSE DIAS DE SOUSA</td>
+<td>ICENE</td>
+<td>Evento</td>
+<td>Trabalho</td>
+<td>22/03/2022</td>
+<td>24/03/2022</td>
+<td>05/10/2021</td>
+<td>07/10/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">315</td>
+<td>316/2021</td>
+<td>(proposta cancelada)</td>
+<td>Prospecção de oportunidades de Pesquisa, Desen...</td>
+<td>DOUGLAS MOURA MIRANDA</td>
+<td>Núcleo de Inovação Tecnológica</td>
+<td>Programa</td>
+<td>Tecnologia e Produção</td>
+<td>1/12/2021</td>
+<td>30/11/2026</td>
+<td>19/10/2021</td>
+<td>28/10/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">325</td>
+<td>326/2021</td>
+<td>(Nº de registro alterado - ver planilha de 2022)</td>
+<td>Anatomia descritiva e funcional do sistema art...</td>
+<td>LEONARDO AUGUSTO LOMBARDI</td>
+<td>ICBN</td>
+<td>Curso</td>
+<td>Saúde</td>
+<td>17/01/2022</td>
+<td>28/01/2022</td>
+<td>22/10/2021</td>
+<td>17/11/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">332</td>
+<td>333/2021</td>
+<td>(Nº de registro alterado - ver planilha de 2022)</td>
+<td>VIII SIMPÓSIO INTERNACIONAL DE ESTUDOS LINGUÍS...</td>
+<td>ANA AMELIA CALAZANS DA ROSA</td>
+<td>IELACHS</td>
+<td>Evento</td>
+<td>Educação</td>
+<td>03/05/2022</td>
+<td>06/05/2022</td>
+<td>18/11/2021</td>
+<td>24/11/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>FUNEPU</td>
+<td>23.850,73</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">334</td>
+<td>335/2021</td>
+<td>(Nº de registro alterado - ver planilha de 2022)</td>
+<td>Doação de Sangue - compromisso social</td>
+<td>SHEILA SOARES SILVA</td>
+<td>ICS</td>
+<td>Projeto</td>
+<td>Saúde</td>
+<td>03/01/2022</td>
+<td>31/10/2022</td>
+<td>23/11/2021</td>
+<td>03/12/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">336</td>
+<td>337/2021</td>
+<td>(Nº de registro alterado - ver planilha de 2022)</td>
+<td>Guia Digital Ilustrado das Angiospermas do Bai...</td>
+<td>POLYANA NORONHA SOARES</td>
+<td>ICENE</td>
+<td>Projeto</td>
+<td>Educação</td>
+<td>06/01/2022</td>
+<td>06/07/2022</td>
+<td>26/11/2021</td>
+<td>06/12/2021</td>
+<td>SIEX - Fluxo Contínuo</td>
+<td>Não Tem Recurso Financeiro</td>
+<td>----</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>With that, the column “Registro” is done.</p>
+</section>
+<section id="título-da-atividade" class="level3">
+<h3 class="anchored" data-anchor-id="título-da-atividade">Título da Atividade</h3>
+</section>
 </section>
 </section>
 
